@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista de Presença</title>
+<link rel="icon" href="image/petition_8305727.ico" type="image/x-icon">
+<!-- Adicione a biblioteca FileSaver.js -->
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 80%;
+  max-width: 600px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+table th {
+  background-color: #f7f7f7;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.5);
+}
+
+/* Estilo infantil */
+table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+thead {
+  background-color: #ffccff; /* Rosa */
+}
+
+th, td {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #ffff99; /* Amarelo */
+}
+
+tbody tr:nth-child(even) {
+  background-color: #ccffff; /* Azul */
+}
+
+.form-container {
+  background-color: #fff;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-container input[type="text"],
+.form-container input[type="number"],
+.form-container button {
+  margin-bottom: 10px;
+  padding: 5px;
+  width: calc(100% - 10px);
+  box-sizing: border-box;
+}
+
+.form-container button {
+  background-color: #fa36cf; /* Verde */
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.form-container button:hover {
+  background-color: #c02ba0; /* Verde mais escuro */
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Lista de Presença</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Idade</th>
+        <th>Presença</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Maria</td>
+        <td>5</td>
+        <td><input type="checkbox" id="presencaMaria"></td>
+      </tr>
+      <tr>
+        <td>João</td>
+        <td>6</td>
+        <td><input type="checkbox" id="presencaJoao"></td>
+      </tr>
+      <tr>
+        <td>Pedro</td>
+        <td>8</td>
+        <td><input type="checkbox" id="presencaPedro"></td>
+      </tr>
+      <!-- Adicione mais linhas conforme necessário -->
+    </tbody>
+  </table>
+  <div class="form-container">
+    <h2>Adicionar Criança</h2>
+    <form id="form">
+      <input type="text" id="nome" placeholder="Nome" required>
+      <input type="number" id="idade" placeholder="Idade" required>
+      <button type="submit">Adicionar</button>
+    </form>
+    <button id="confirmarLista">Confirmar Lista</button>
+  </div>
+</div>
+<script>
+var form = document.getElementById('form');
+form.addEventListener('submit', function(event) {
+  event.preventDefault();
+  var nome = document.getElementById('nome').value;
+  var idade = document.getElementById('idade').value;
+  var tbody = document.querySelector('table tbody');
+  var newRow = document.createElement('tr');
+  newRow.innerHTML = '<td>' + nome + '</td><td>' + idade + '</td><td><input type="checkbox" data-recente></td>';
+  tbody.appendChild(newRow);
+  form.reset();
+});
+
+var confirmarListaBtn = document.getElementById('confirmarLista');
+confirmarListaBtn.addEventListener('click', function() {
+  var count46 = 0;
+  var count710 = 0;
+  var primeiraVez46 = 0;
+  var primeiraVez710 = 0;
+
+  var tbody = document.querySelector('table tbody');
+  var rows = tbody.querySelectorAll('tr');
+  rows.forEach(function(row) {
+    var idade = parseInt(row.querySelector('td:nth-child(2)').innerText);
+    var checkbox = row.querySelector('input[type="checkbox"]');
+    if (checkbox.checked) {
+      if (idade >= 4 && idade <= 6) {
+        count46++;
+        if (checkbox.hasAttribute('data-recente')) {
+          primeiraVez46++;
+        }
+      } else if (idade >= 7 && idade <= 10) {
+        count710++;
+        if (checkbox.hasAttribute('data-recente')) {
+          primeiraVez710++;
+        }
+      }
+    }
+  });
+
+  var html = 'Crianças:\n';
+  html += 'Quant. De crianças de 4 a 6 anos : ' + count46 + '\n';
+  html += 'Quant. De crianças de 7 a 10 anos : ' + count710 + '\n\n';
+  html += 'Primeira vez:\n';
+  html += 'Quant. De crianças de 4 a 6 anos : ' + primeiraVez46 + '\n';
+  html += 'Quant. De crianças de 7 a 10 anos : ' + primeiraVez710 + '\n';
+
+  var blob = new Blob([html], {type: 'text/plain'});
+  saveAs(blob, 'ListaPresenca_' + new Date().toISOString().split('T')[0] + '.txt');
+});
+</script>
+</body>
+</html>
